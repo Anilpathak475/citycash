@@ -1,4 +1,4 @@
-package com.citycash.shop
+package com.citycash.shop.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -14,9 +14,11 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.citycash.shop.*
 import com.citycash.shop.databinding.FragmentProductBinding
 import com.citycash.shop.network.errorhandler.WishErrorHandler
 import com.citycash.shop.network.model.Product
+import com.citycash.shop.ui.viewmodel.MainViewModel
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_product.*
@@ -86,7 +88,8 @@ class ProductFragment : Fragment() {
 
 
     inner class ProductAdapter(val listener: (String) -> Unit) :
-        RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(), AutoUpdatableAdapter {
+        RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(),
+        AutoUpdatableAdapter {
 
         var products: List<Product> by Delegates.observable(emptyList()) { _, old, new ->
             autoNotify(old, new) { o, n -> o.id == n.id }

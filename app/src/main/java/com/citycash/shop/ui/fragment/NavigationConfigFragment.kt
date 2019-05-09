@@ -1,10 +1,11 @@
-package com.citycash.shop
+package com.citycash.shop.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.citycash.shop.R
 import com.citycash.shop.databinding.FragmentNavigationConfigBinding
 
 class NavigationConfigFragment : Fragment() {

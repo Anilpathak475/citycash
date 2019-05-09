@@ -1,4 +1,4 @@
-package com.citycash.shop
+package com.citycash.shop.ui.viewmodel
 
 
 import android.app.Application
