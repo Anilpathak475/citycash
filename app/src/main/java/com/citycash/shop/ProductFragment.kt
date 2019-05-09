@@ -24,12 +24,7 @@ import kotlinx.android.synthetic.main.item_product.view.*
 import kotlin.properties.Delegates
 
 
-class ProductFragment : Fragment(), DashboardActivity.OnFragmentInteractionListener {
-    override fun onNavMenuSelected(navId: Int) {
-        /*   val action = ProductFragmentDirections.actionProductFragmentToNavActionFragment(navId)
-           navController.navigate(action)*/
-    }
-
+class ProductFragment : Fragment() {
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
@@ -83,7 +78,8 @@ class ProductFragment : Fragment(), DashboardActivity.OnFragmentInteractionListe
     }
 
     private fun setData(products: List<Product>) {
-        binding.productRecyclerView.visibility = if (products.isNotEmpty()) View.VISIBLE else View.GONE
+        binding.hasProducts = products.isNotEmpty()
+
         productAdapter.products = products
         productAdapter.notifyDataSetChanged()
     }
@@ -92,7 +88,7 @@ class ProductFragment : Fragment(), DashboardActivity.OnFragmentInteractionListe
     inner class ProductAdapter(val listener: (String) -> Unit) :
         RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(), AutoUpdatableAdapter {
 
-        var products: List<Product> by Delegates.observable(emptyList()) { prop, old, new ->
+        var products: List<Product> by Delegates.observable(emptyList()) { _, old, new ->
             autoNotify(old, new) { o, n -> o.id == n.id }
         }
 

@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
                 name="hasProducts"
                 type="boolean"/>
@@ -22,6 +22,7 @@
                 android:clipToPadding="false"
                 android:paddingLeft="@dimen/margin_normal"
                 android:paddingRight="@dimen/margin_normal"
+                android:visibility="@{hasProducts ? View.VISIBLE : View.GONE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_product"/>
 
@@ -31,8 +32,9 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/no_products"
+                android:visibility="@{hasProducts ? View.GONE : View.VISIBLE}"
                 android:textSize="24sp"
-              />
+        />
 
     </FrameLayout>
 
