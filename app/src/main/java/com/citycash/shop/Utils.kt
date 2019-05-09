@@ -8,7 +8,7 @@ import android.net.ConnectivityManager
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-
+import androidx.databinding.BindingAdapter
 
 val Context.networkStatus
     @SuppressLint("MissingPermission")
@@ -39,6 +39,8 @@ private fun noInternetDialog(activity: Activity) {
     }
 }
 
+val NAV_ACTION_PARAM = "nav_action_id"
+
 interface AutoUpdatableAdapter {
 
     fun <T> RecyclerView.Adapter<*>.autoNotify(old: List<T>, new: List<T>, compare: (T, T) -> Boolean) {
@@ -60,6 +62,8 @@ interface AutoUpdatableAdapter {
         diff.dispatchUpdatesTo(this)
     }
 }
+
+
 
 
 

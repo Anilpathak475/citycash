@@ -14,31 +14,23 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.citycash.shop.databinding.FragmentProductBinding
 import com.citycash.shop.network.errorhandler.WishErrorHandler
 import com.citycash.shop.network.model.Product
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_product.*
-import kotlinx.android.synthetic.main.item_product.*
 import kotlinx.android.synthetic.main.item_product.view.*
 import kotlin.properties.Delegates
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class ProductFragment : Fragment(), DashboardActivity.OnFragmentInteractionListener {
+    override fun onNavMenuSelected(navId: Int) {
+        /*   val action = ProductFragmentDirections.actionProductFragmentToNavActionFragment(navId)
+           navController.navigate(action)*/
+    }
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [ProductFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [ProductFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
-class ProductFragment : Fragment() {
+
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
@@ -49,14 +41,16 @@ class ProductFragment : Fragment() {
             navController.navigate(action)
         }
     }
-
+    lateinit var binding: FragmentProductBinding
     private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_product, container, false)
+        binding = FragmentProductBinding.inflate(inflater, container, false)
+        binding.productRecyclerView.adapter = productAdapter
+        return binding.root
     }
 
 
@@ -85,15 +79,13 @@ class ProductFragment : Fragment() {
             }
             else -> Toast.makeText(activity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
         }
-        progressBar.gone()
 
     }
 
-    private fun setData(words: List<Product>) {
-        productAdapter.products = words
+    private fun setData(products: List<Product>) {
+        binding.productRecyclerView.visibility = if (products.isNotEmpty()) View.VISIBLE else View.GONE
+        productAdapter.products = products
         productAdapter.notifyDataSetChanged()
-        progressBar.gone()
-        productRecyclerView.visible()
     }
 
 
@@ -145,4 +137,23 @@ class ProductFragment : Fragment() {
         }
     }
 
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @return A new instance of fragment ProductFragment.
+         */
+        @JvmStatic
+        fun newInstance(param1: Int) =
+            ProductFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(NAV_ACTION_PARAM, param1)
+                }
+            }
+    }
+
+
 }
+
