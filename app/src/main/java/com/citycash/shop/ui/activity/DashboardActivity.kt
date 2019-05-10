@@ -24,23 +24,20 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
-    private var listener: FilterFragment.OnFragmentInteractionListener? = null
-
     private var searchView: SearchView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard_activity)
         setupNavigation()
     }
 
-    // Setting Up One Time Navigation
     private fun setupNavigation() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         drawerLayout = findViewById(R.id.drawer_layout)
-
 
         navController = Navigation.findNavController(this, R.id.nav_hot_main_fragment)
 
@@ -71,7 +68,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.dashboard_activity, menu)
 
-        // Associate search_layout configuration with the SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView = menu.findItem(R.id.action_search)
             .actionView as SearchView
@@ -79,7 +75,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             .getSearchableInfo(componentName))
         searchView!!.maxWidth = Integer.MAX_VALUE
 
-        // listening to search query text change
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 EventBus.getDefault().post(
@@ -116,9 +111,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-
         menuItem.isChecked = true
-
         drawerLayout.closeDrawers()
 
         val id = menuItem.itemId
