@@ -5,19 +5,16 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.citycash.shop.FilterEvent
 import com.citycash.shop.R
-import com.citycash.shop.gone
-import com.citycash.shop.ui.fragment.ProductFragment
-import com.citycash.shop.visible
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_dashboard_activity.*
 import org.greenrobot.eventbus.EventBus
@@ -37,8 +34,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private fun setupNavigation() {
         setSupportActionBar(toolbar)
+
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
@@ -110,11 +107,11 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         menuItem.isChecked = true
         drawerLayout.closeDrawers()
-
         val id = menuItem.itemId
         val bundel = Bundle()
         bundel.putInt("navId", id)
         navController.navigate(R.id.workInProgressFragment, bundel)
+        Toast.makeText(this, "Work in Progress", Toast.LENGTH_SHORT).show()
         return true
 
     }

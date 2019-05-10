@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.citycash.shop.AutoUpdatableAdapter
+import com.citycash.shop.R
 import com.citycash.shop.gone
 import com.citycash.shop.network.model.Product
 import com.citycash.shop.visible
@@ -76,7 +77,9 @@ class ProductAdapter(val listener: (Product) -> Unit) :
             itemView.let {
                 it.productName.text = if (product.name!!.isNotEmpty()) product.name else ""
                 it.productId.text = if (product.id!!.isNotEmpty()) product.id else ""
-                it.productPrice.text = if (product.price!!.isNotEmpty()) product.price else ""
+                val price =
+                    """${it.context.getString(R.string.Rs)}${if (product.price!!.isNotEmpty()) product.price else ""}"""
+                it.productPrice.text = price
                 it.productQty.text = if (product.qty!!.isNotEmpty()) product.qty else ""
                 if (!it.productImageLoader.isVisible) it.productImageLoader.visible()
                 if (product.image!!.isNotEmpty())

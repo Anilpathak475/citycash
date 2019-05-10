@@ -1,6 +1,5 @@
 package com.citycash.shop.ui.fragment
 
-import android.R
 import android.app.Dialog
 import android.os.Bundle
 import android.view.*
@@ -15,11 +14,14 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.citycash.shop.FilterEvent
+import com.citycash.shop.R
 import com.citycash.shop.databinding.FragmentProductBinding
+import com.citycash.shop.gone
 import com.citycash.shop.network.errorhandler.WishErrorHandler
 import com.citycash.shop.network.model.Product
 import com.citycash.shop.ui.ProductAdapter
 import com.citycash.shop.ui.viewmodel.MainViewModel
+import com.citycash.shop.visible
 import kotlinx.android.synthetic.main.fragment_product.*
 import kotlinx.android.synthetic.main.layout_sort.*
 import org.greenrobot.eventbus.EventBus
@@ -67,7 +69,9 @@ class ProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         navController = Navigation.findNavController(view)
+
         productRecyclerView.let {
             it.layoutManager = LinearLayoutManager(context)
             it.adapter = productAdapter
@@ -77,20 +81,21 @@ class ProductFragment : Fragment() {
             , Observer { setData(it) })
         viewModel.exception.observe(this, Observer { errorHandler(it) })
         viewModel.loadProducts()
-        swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing = true
-            viewModel.loadProducts()
-        }
 
+        initListener()
+    }
+
+    private fun initListener() {
         sortProducts.setOnClickListener {
-            val dialog = Dialog(ContextThemeWrapper(context, com.citycash.shop.R.style.DialogSlideAnim))
+            val dialog = Dialog(ContextThemeWrapper(context, R.style.DialogSlideAnim))
             dialog.let {
                 it.window?.setGravity(Gravity.BOTTOM)
                 it.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 it.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                it.setContentView(com.citycash.shop.R.layout.layout_sort)
+                it.setContentView(R.layout.layout_sort)
+                it.setCanceledOnTouchOutside(true)
             }
-            val arrayAdapter = ArrayAdapter<String>(context!!, R.layout.select_dialog_singlechoice)
+            val arrayAdapter = ArrayAdapter<String>(context!!, R.layout.select_dialog_singlechoice_material)
             arrayAdapter.add("A")
             arrayAdapter.add("B")
             arrayAdapter.add("C")
@@ -98,24 +103,37 @@ class ProductFragment : Fragment() {
                 it.adapter = arrayAdapter
                 it.onItemClickListener = AdapterView.OnItemClickListener { _, _, i, l ->
                     val selectedSortItem = arrayAdapter.getItem(i)
-                    Toast.makeText(activity, selectedSortItem, Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
                     sortProducts(selectedSortItem!!.toLowerCase())
                 }
             }
             dialog.show()
         }
+
+        clearSorting.setOnClickListener { clearSorting() }
+
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            viewModel.loadProducts()
+        }
     }
 
     private fun sortProducts(sortProps: String) {
-        var sortedProducts: List<Product> = mutableListOf()
-        when (sortProps) {
-            "a" -> sortedProducts = viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.a })
-            "b" -> sortedProducts = viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.b })
-            "c" -> sortedProducts = viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.c })
+        val sortedProducts: List<Product> = when (sortProps) {
+            "a" -> viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.a })
+            "b" -> viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.b })
+            "c" -> viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.c })
+            else -> viewModel.products.value!!
         }
+        clearSorting.visible()
         setData(sortedProducts)
     }
+
+    fun clearSorting() {
+        setData(viewModel.products.value!!)
+        clearSorting.gone()
+    }
+
 
     private fun errorHandler(exception: Exception) {
         when (exception) {

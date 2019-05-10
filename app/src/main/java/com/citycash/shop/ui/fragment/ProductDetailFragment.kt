@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.citycash.shop.databinding.FragmentProductDetailBinding
 import com.citycash.shop.gone
@@ -13,7 +12,6 @@ import com.citycash.shop.visible
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_product_detail.*
-import kotlinx.android.synthetic.main.item_product.*
 
 
 class ProductDetailFragment : Fragment() {
