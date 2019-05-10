@@ -11,7 +11,7 @@
 
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -24,7 +24,9 @@
                 android:paddingRight="@dimen/margin_normal"
                 android:visibility="@{hasProducts ? View.VISIBLE : View.GONE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_product"/>
+                tools:listitem="@layout/item_product" app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
                 android:id="@+id/empty_garden"
@@ -34,8 +36,9 @@
                 android:text="@string/no_products"
                 android:visibility="@{hasProducts ? View.GONE : View.VISIBLE}"
                 android:textSize="24sp"
-        />
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

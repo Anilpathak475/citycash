@@ -87,7 +87,7 @@ class ProductFragment : Fragment() {
     }
 
 
-    inner class ProductAdapter(val listener: (String) -> Unit) :
+    inner class ProductAdapter(val listener: (Product) -> Unit) :
         RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(),
         AutoUpdatableAdapter {
 
@@ -117,7 +117,7 @@ class ProductFragment : Fragment() {
                 itemView.productPrice.text = product.price
                 itemView.productQty.text = product.qty
                 if (!itemView.productImageLoader.isVisible) itemView.productImageLoader.visible()
-                if (product.image.isNotEmpty())
+                if (product.image!!.isNotEmpty())
                     Picasso.get().load("http://i.imgur.com/DvpvklR.png")
                         .into(itemView.productImage, object : Callback {
                             override fun onSuccess() {
@@ -130,7 +130,7 @@ class ProductFragment : Fragment() {
                             }
                         })
                 itemView.setOnClickListener {
-                    listener(product.id)
+                    listener(product)
                 }
             }
         }
