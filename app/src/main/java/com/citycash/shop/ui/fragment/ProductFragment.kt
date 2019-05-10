@@ -1,10 +1,13 @@
 package com.citycash.shop.ui.fragment
 
+import android.R
+import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,6 +21,7 @@ import com.citycash.shop.network.model.Product
 import com.citycash.shop.ui.ProductAdapter
 import com.citycash.shop.ui.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_product.*
+import kotlinx.android.synthetic.main.layout_sort.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -34,7 +38,6 @@ class ProductFragment : Fragment() {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
 
-    private var products: MutableList<Product> = mutableListOf()
     private val productAdapter by lazy {
         ProductAdapter {
             val action = ProductFragmentDirections.actionProductFragmentToProductDetailFragment(it)
@@ -78,6 +81,29 @@ class ProductFragment : Fragment() {
             swipeRefreshLayout.isRefreshing = true
             viewModel.loadProducts()
         }
+
+        sortProducts.setOnClickListener {
+            val dialog = Dialog(ContextThemeWrapper(context, com.citycash.shop.R.style.DialogSlideAnim))
+            dialog.let {
+                it.window.setGravity(Gravity.BOTTOM)
+                it.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                it.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                it.setContentView(com.citycash.shop.R.layout.layout_sort)
+            }
+            val arrayAdapter = ArrayAdapter<String>(context, R.layout.select_dialog_singlechoice)
+            arrayAdapter.add("A")
+            arrayAdapter.add("B")
+            arrayAdapter.add("C")
+            dialog.sortList.let {
+                it.adapter = arrayAdapter
+                it.onItemClickListener = AdapterView.OnItemClickListener { _, _, i, l ->
+                    val selectedSortItem = arrayAdapter.getItem(i)
+                    Toast.makeText(activity, selectedSortItem, Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+            }
+            dialog.show()
+        }
     }
 
     private fun errorHandler(exception: Exception) {
@@ -91,6 +117,10 @@ class ProductFragment : Fragment() {
             else -> Toast.makeText(activity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     private fun setData(products: List<Product>) {

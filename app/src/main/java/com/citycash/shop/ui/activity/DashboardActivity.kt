@@ -9,12 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.citycash.shop.FilterEvent
-import com.citycash.shop.FilterFragment
 import com.citycash.shop.R
+import com.citycash.shop.gone
+import com.citycash.shop.ui.fragment.ProductFragment
+import com.citycash.shop.visible
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_dashboard_activity.*
 import org.greenrobot.eventbus.EventBus
@@ -54,10 +57,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onBackPressed() {
-        if (!searchView!!.isIconified) {
-            searchView!!.isIconified = true
-            return
-        }
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
@@ -67,12 +66,13 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.dashboard_activity, menu)
-
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView = menu.findItem(R.id.action_search)
             .actionView as SearchView
-        searchView!!.setSearchableInfo(searchManager
-            .getSearchableInfo(componentName))
+        searchView!!.setSearchableInfo(
+            searchManager
+                .getSearchableInfo(componentName)
+        )
         searchView!!.maxWidth = Integer.MAX_VALUE
 
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -88,7 +88,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             override fun onQueryTextChange(query: String): Boolean {
                 EventBus.getDefault().post(
                     FilterEvent(
-                       query
+                        query
                     )
                 )
                 return true
@@ -106,9 +106,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         return true
     }
-
-
-
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         menuItem.isChecked = true

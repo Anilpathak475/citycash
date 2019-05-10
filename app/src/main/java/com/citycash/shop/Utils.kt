@@ -42,8 +42,6 @@ private fun noInternetDialog(activity: Activity) {
 
 class FilterEvent(val filterQuery: String)
 
-val NAV_ACTION_PARAM = "nav_action_id"
-
 interface AutoUpdatableAdapter {
 
     fun <T> RecyclerView.Adapter<*>.autoNotify(old: List<T>, new: List<T>, compare: (T, T) -> Boolean) {
