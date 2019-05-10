@@ -1,4 +1,4 @@
-package com.citycash.shop.ui
+package com.citycash.shop.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

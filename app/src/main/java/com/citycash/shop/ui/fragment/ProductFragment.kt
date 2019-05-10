@@ -13,15 +13,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.citycash.shop.FilterEvent
-import com.citycash.shop.R
+import com.citycash.shop.*
 import com.citycash.shop.databinding.FragmentProductBinding
-import com.citycash.shop.gone
 import com.citycash.shop.network.errorhandler.WishErrorHandler
 import com.citycash.shop.network.model.Product
-import com.citycash.shop.ui.ProductAdapter
+import com.citycash.shop.ui.adapter.ProductAdapter
 import com.citycash.shop.ui.viewmodel.MainViewModel
-import com.citycash.shop.visible
 import kotlinx.android.synthetic.main.fragment_product.*
 import kotlinx.android.synthetic.main.layout_sort.*
 import org.greenrobot.eventbus.EventBus
@@ -76,11 +73,17 @@ class ProductFragment : Fragment() {
             it.layoutManager = LinearLayoutManager(context)
             it.adapter = productAdapter
         }
+
         binding.productRecyclerView.adapter = productAdapter
         viewModel.products.observe(this
             , Observer { setData(it) })
         viewModel.exception.observe(this, Observer { errorHandler(it) })
-        viewModel.loadProducts()
+        when {
+            context!!.networkStatus -> viewModel.loadProducts()
+            else -> {
+                noInternetDialog(activity!!)
+            }
+        }
 
         initListener()
     }
@@ -96,9 +99,12 @@ class ProductFragment : Fragment() {
                 it.setCanceledOnTouchOutside(true)
             }
             val arrayAdapter = ArrayAdapter<String>(context!!, R.layout.select_dialog_singlechoice_material)
-            arrayAdapter.add("A")
-            arrayAdapter.add("B")
-            arrayAdapter.add("C")
+            arrayAdapter.let {
+                it.add("A")
+                it.add("B")
+                it.add("C")
+            }
+
             dialog.sortList.let {
                 it.adapter = arrayAdapter
                 it.onItemClickListener = AdapterView.OnItemClickListener { _, _, i, l ->
@@ -110,7 +116,7 @@ class ProductFragment : Fragment() {
             dialog.show()
         }
 
-        clearSorting.setOnClickListener { clearSorting() }
+        clearSorting.setOnClickListener { clearSortedProducts() }
 
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
@@ -129,7 +135,7 @@ class ProductFragment : Fragment() {
         setData(sortedProducts)
     }
 
-    fun clearSorting() {
+    private fun clearSortedProducts() {
         setData(viewModel.products.value!!)
         clearSorting.gone()
     }

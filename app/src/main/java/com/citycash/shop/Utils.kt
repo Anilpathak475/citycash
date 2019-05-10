@@ -6,10 +6,8 @@ import android.app.AlertDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.view.View
-import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.databinding.BindingAdapter
 
 val Context.networkStatus
     @SuppressLint("MissingPermission")
@@ -28,7 +26,7 @@ fun View.visible() {
     visibility = View.VISIBLE
 }
 
-private fun noInternetDialog(activity: Activity) {
+fun noInternetDialog(activity: Activity) {
     try {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle("No Internet Connection")

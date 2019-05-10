@@ -52,6 +52,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:id="@+id/sortProducts"
                 android:textSize="18sp"
+                android:visibility="@{hasProducts ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/clearSorting"
                 app:layout_constraintBottom_toBottomOf="parent"/>

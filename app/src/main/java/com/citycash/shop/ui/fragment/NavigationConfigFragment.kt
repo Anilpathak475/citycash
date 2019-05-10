@@ -9,15 +9,7 @@ import com.citycash.shop.R
 import com.citycash.shop.databinding.FragmentNavigationConfigBinding
 
 class NavigationConfigFragment : Fragment() {
-    private var navId: Int = 0
     lateinit var binding: FragmentNavigationConfigBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            navId = it.getInt("navId")
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,15 +21,17 @@ class NavigationConfigFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var navTagValue = ""
-        if (navId > 0)
-            when (navId) {
-                R.id.nav_account -> navTagValue = "My Account"
-                R.id.nav_orders -> navTagValue = "My Orders"
-                R.id.nav_offers -> navTagValue = "Offers"
-
+        arguments?.let {
+            if (it.containsKey("navId")) {
+                val navId = it.getInt("navId")
+                binding.navTag = when (navId) {
+                    R.id.nav_account -> "My Account"
+                    R.id.nav_orders -> "My Orders"
+                    R.id.nav_offers -> "Offers"
+                    else -> ""
+                }
             }
-        binding.navTag = navTagValue
-    }
+        }
 
+    }
 }

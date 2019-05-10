@@ -46,7 +46,7 @@ class ProductDetailFragment : Fragment() {
                             productDeailImageLoader.gone()
                         }
 
-                        override fun onError(e: java.lang.Exception?) {
+                        override fun onError(e: Exception?) {
                             productDeailImageLoader.gone()
                         }
                     })
