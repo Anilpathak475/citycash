@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.view.View
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.databinding.BindingAdapter
@@ -38,6 +39,8 @@ private fun noInternetDialog(activity: Activity) {
         e.printStackTrace()
     }
 }
+
+class FilterEvent(val filterQuery: String)
 
 val NAV_ACTION_PARAM = "nav_action_id"
 

@@ -1,27 +1,36 @@
 package com.citycash.shop.ui.activity
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.citycash.shop.FilterEvent
+import com.citycash.shop.FilterFragment
 import com.citycash.shop.R
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_dashboard_activity.*
+import org.greenrobot.eventbus.EventBus
 
 
 class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
+    private var listener: FilterFragment.OnFragmentInteractionListener? = null
+
+    private var searchView: SearchView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard_activity)
         setupNavigation()
-
     }
 
     // Setting Up One Time Navigation
@@ -48,12 +57,63 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onBackPressed() {
+        if (!searchView!!.isIconified) {
+            searchView!!.isIconified = true
+            return
+        }
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.dashboard_activity, menu)
+
+        // Associate search_layout configuration with the SearchView
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView = menu.findItem(R.id.action_search)
+            .actionView as SearchView
+        searchView!!.setSearchableInfo(searchManager
+            .getSearchableInfo(componentName))
+        searchView!!.maxWidth = Integer.MAX_VALUE
+
+        // listening to search query text change
+        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                EventBus.getDefault().post(
+                    FilterEvent(
+                        query
+                    )
+                )
+                return true
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                EventBus.getDefault().post(
+                    FilterEvent(
+                       query
+                    )
+                )
+                return true
+            }
+
+        })
+
+        searchView!!.setOnCloseListener {
+            EventBus.getDefault().post(
+                FilterEvent(
+                    ""
+                )
+            )
+            true
+        }
+        return true
+    }
+
+
+
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
 

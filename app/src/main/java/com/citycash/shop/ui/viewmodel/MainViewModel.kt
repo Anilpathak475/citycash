@@ -17,6 +17,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _exception = MutableLiveData<java.lang.Exception>()
     val exception: LiveData<java.lang.Exception> get() = _exception
 
+
+
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> get() = _products
 
@@ -30,11 +32,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onException(exception: Exception) {
                 super.onException(exception)
-               _exception.value = exception
+                _exception.value = exception
             }
         })
     }
 
+    fun filerDate(filterQuery: String) {
+
+    }
     private fun productApi(): LiveData<Wrapper<ApiResponse>> {
         return ProductRequest().doRequest()
     }

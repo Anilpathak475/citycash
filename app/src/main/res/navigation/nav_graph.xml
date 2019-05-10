@@ -19,6 +19,7 @@
                 app:popUpTo="@id/productFragment" app:popUpToInclusive="true"
         />
         <argument android:name="product" app:argType="com.citycash.shop.network.model.Product"/>
+        <action android:id="@+id/action_productDetailFragment_to_filterFragment" app:destination="@id/filterFragment"/>
     </fragment>
 
     <fragment
@@ -28,6 +29,8 @@
     >
         <argument android:name="navid" app:argType="integer"/>
     </fragment>
+    <fragment android:id="@+id/filterFragment" android:name="com.citycash.shop.FilterFragment"
+              android:label="fragment_filter" tools:layout="@layout/fragment_filter"/>
 
 
 </navigation>

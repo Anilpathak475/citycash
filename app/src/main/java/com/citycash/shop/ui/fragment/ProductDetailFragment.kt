@@ -4,19 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.citycash.shop.R
+import com.citycash.shop.databinding.FragmentProductDetailBinding
+import com.citycash.shop.gone
 import com.citycash.shop.network.model.Product
+import com.citycash.shop.visible
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_product_detail.*
+import kotlinx.android.synthetic.main.item_product.*
 
 
 class ProductDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private lateinit var product: Product
+    private var product: Product? = null
+    private lateinit var binding: FragmentProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            product = it.getParcelable("product") as Product
+            if (it.containsKey("product"))
+                product = it.getParcelable("product") as Product
         }
     }
 
@@ -24,9 +32,27 @@ class ProductDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_detail, container, false)
+        binding = FragmentProductDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (product != null) {
+            binding.product = product!!
+            if (product!!.image!!.isNotEmpty())
+                Picasso.get().load(product!!.image)
+                    .into(productDetailmage, object : Callback {
+                        override fun onSuccess() {
+                            productDetailmage.visible()
+                            productDeailImageLoader.gone()
+                        }
+
+                        override fun onError(e: java.lang.Exception?) {
+                            productDeailImageLoader.gone()
+                        }
+                    })
+        }
+    }
 
 }
