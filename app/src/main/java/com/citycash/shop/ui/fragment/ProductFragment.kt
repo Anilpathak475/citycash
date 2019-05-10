@@ -85,12 +85,12 @@ class ProductFragment : Fragment() {
         sortProducts.setOnClickListener {
             val dialog = Dialog(ContextThemeWrapper(context, com.citycash.shop.R.style.DialogSlideAnim))
             dialog.let {
-                it.window.setGravity(Gravity.BOTTOM)
+                it.window?.setGravity(Gravity.BOTTOM)
                 it.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                it.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                it.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 it.setContentView(com.citycash.shop.R.layout.layout_sort)
             }
-            val arrayAdapter = ArrayAdapter<String>(context, R.layout.select_dialog_singlechoice)
+            val arrayAdapter = ArrayAdapter<String>(context!!, R.layout.select_dialog_singlechoice)
             arrayAdapter.add("A")
             arrayAdapter.add("B")
             arrayAdapter.add("C")
@@ -100,10 +100,21 @@ class ProductFragment : Fragment() {
                     val selectedSortItem = arrayAdapter.getItem(i)
                     Toast.makeText(activity, selectedSortItem, Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
+                    sortProducts(selectedSortItem!!.toLowerCase())
                 }
             }
             dialog.show()
         }
+    }
+
+    private fun sortProducts(sortProps: String) {
+        var sortedProducts: List<Product> = mutableListOf()
+        when (sortProps) {
+            "a" -> sortedProducts = viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.a })
+            "b" -> sortedProducts = viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.b })
+            "c" -> sortedProducts = viewModel.products.value!!.sortedWith(compareBy { it.sortProps!!.c })
+        }
+        setData(sortedProducts)
     }
 
     private fun errorHandler(exception: Exception) {
@@ -117,10 +128,6 @@ class ProductFragment : Fragment() {
             else -> Toast.makeText(activity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
         }
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     private fun setData(products: List<Product>) {
